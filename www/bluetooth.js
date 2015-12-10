@@ -141,7 +141,7 @@ Bluetooth.prototype.isDiscovering = function(onSuccess, onError)
  */
 Bluetooth.prototype.startDiscovery = function(onDeviceDiscovered, onDiscoveryFinished, onError, opts)
 {
-    opts = opts || {};
+    opts = opts||{};
     if(opts.timeout)
     {
         var timeout = function()
@@ -404,6 +404,16 @@ Bluetooth.prototype.write = function(onSuccess, onError, data, encoding, forceSt
     forceString = forceString || false;
 
     exec(onSuccess, onError, "Bluetooth", "write", [data, encoding, forceString]);
+}
+
+Bluetooth.prototype.getAddress = function(onSuccess, onError)
+{
+    exec(onSuccess, onError, "Bluetooth", "getAddress", []);
+}
+
+Bluetooth.prototype.getName = function(onSuccess, onError)
+{
+    exec(onSuccess, onError, "Bluetooth", "getName", []);
 }
 
 var bluetooth   = new Bluetooth();

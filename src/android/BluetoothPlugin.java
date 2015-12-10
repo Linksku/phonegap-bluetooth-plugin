@@ -56,6 +56,10 @@ public class BluetoothPlugin extends CordovaPlugin
 	private	static final String ACTION_STOP_READING		= "stopConnectionManager";
 
 	private static final String ACTION_WRITE			= "write";
+	
+	// Added by Leo
+	private static final String ACTION_GET_ADDRESS	= "getAddress";
+	private static final String ACTION_GET_NAME			= "getName";
 
 	/**
 	 * Bluetooth interface
@@ -195,6 +199,14 @@ public class BluetoothPlugin extends CordovaPlugin
 		else if(ACTION_WRITE.equals(action))
 		{
 			write(args, callbackCtx);
+		}
+		else if(ACTION_GET_ADDRESS.equals(action))
+		{
+			getAddress(args, callbackCtx);
+		}
+		else if(ACTION_GET_NAME.equals(action))
+		{
+			getName(args, callbackCtx);
 		}
 		else
 		{
@@ -1031,4 +1043,28 @@ public class BluetoothPlugin extends CordovaPlugin
 			return true;
 		}
 	});
+
+	private void getAddress(JSONArray args, CallbackContext callbackCtx)
+	{
+		try
+		{
+			callbackCtx.sendPluginResult(new PluginResult(PluginResult.Status.OK, _bluetooth.getAddress()));
+		}
+		catch(Exception e)
+		{
+			this.error(callbackCtx, e.getMessage(), BluetoothError.ERR_UNKNOWN);
+		}
+	}
+
+	private void getName(JSONArray args, CallbackContext callbackCtx)
+	{
+		try
+		{
+			callbackCtx.sendPluginResult(new PluginResult(PluginResult.Status.OK, _bluetooth.getName()));
+		}
+		catch(Exception e)
+		{
+			this.error(callbackCtx, e.getMessage(), BluetoothError.ERR_UNKNOWN);
+		}
+	}
 }

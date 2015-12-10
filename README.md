@@ -26,7 +26,7 @@ before starting out.
 To install this plugin on 3.0.0, use the phonegap CLI.
 
 ```
-phonegap local plugin add https://github.com/tanelih/phonegap-bluetooth-plugin.git
+cordova plugin add https://github.com/Linksku/phonegap-bluetooth-plugin.git
 ```
 
 Remember to build the project afterwards.

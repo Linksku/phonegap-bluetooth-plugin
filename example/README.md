@@ -10,7 +10,7 @@ bower install
 cordova create build-example/ com.example.bt "BtExample"
 
 (cd build-example/ && cordova platform add android)
-(cd build-example/ && cordova plugin add https://github.com/tanelih/phonegap-bluetooth-plugin)
+(cd build-example/ && cordova plugin add https://github.com/Linksku/phonegap-bluetooth-plugin)
 
 cp -r www/* build-example/www/
 

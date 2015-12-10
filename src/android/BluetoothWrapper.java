@@ -1007,4 +1007,31 @@ public class BluetoothWrapper
 			_isAlive = false;
 		}
 	}
+	
+	/***
+	 * BY LEO
+	 ***/
+	public String getAddress() throws Exception
+	{
+		try
+		{
+			return _adapter.getAddress();
+		}
+		catch(Exception e)
+		{
+			throw e;
+		}
+	}
+	
+	public String getName() throws Exception
+	{
+		try
+		{
+			return _adapter.getName();
+		}
+		catch(Exception e)
+		{
+			throw e;
+		}
+	}
 }
