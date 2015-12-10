@@ -416,5 +416,10 @@ Bluetooth.prototype.getName = function(onSuccess, onError)
     exec(onSuccess, onError, "Bluetooth", "getName", []);
 }
 
+Bluetooth.prototype.setActionReceiver = function(onSuccess, onError)
+{
+    exec(onSuccess, onError, "Bluetooth", "setActionReceiver", []);
+}
+
 var bluetooth   = new Bluetooth();
 module.exports  = bluetooth;

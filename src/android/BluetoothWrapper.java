@@ -65,6 +65,7 @@ public class BluetoothWrapper
 	public static final String DATA_BYTES_READ			= "BytesRead";
 	public static final String DATA_UUIDS				= "Uuids";
 	public static final String DATA_ERROR				= "Error";
+	public static final String DATA_ACTION			= "Action";
 
 	/**
 	 * Is used to send messages back to the user of this class.
@@ -665,13 +666,16 @@ public class BluetoothWrapper
 		public void onReceive(Context ctx, Intent intent)
 		{
 			String action = intent.getAction();
+			Message msg = null;
+			Bundle bundle = new Bundle();
+			bundle.putString(DATA_ACTION, action);
 
 			if(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED.equals(action))
 			{
 				int connState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
 				if(connState == BluetoothAdapter.STATE_TURNING_OFF || connState == BluetoothAdapter.STATE_OFF)
 				{
-					_handler.obtainMessage(MSG_BLUETOOTH_LOST).sendToTarget();
+					msg = _handler.obtainMessage(MSG_BLUETOOTH_LOST);
 				}
 			}
 			else if(BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action))
@@ -684,22 +688,19 @@ public class BluetoothWrapper
 					String name 	= device.getName();
 					String address 	= device.getAddress();
 
-					Bundle bundle = new Bundle();
 					bundle.putString(DATA_DEVICE_NAME, name);
 					bundle.putString(DATA_DEVICE_ADDRESS, address);
 
-					Message msg = _handler.obtainMessage(MSG_DEVICE_BONDED);
-					msg.setData(bundle);
-					msg.sendToTarget();
+					msg = _handler.obtainMessage(MSG_DEVICE_BONDED);
 				}
 			}
 			else if(BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action))
 			{
-				_handler.obtainMessage(MSG_DISCOVERY_STARTED).sendToTarget();
+				msg = _handler.obtainMessage(MSG_DISCOVERY_STARTED);
 			}
 			else if(BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action))
 			{
-				_handler.obtainMessage(MSG_DISCOVERY_FINISHED).sendToTarget();
+				msg = _handler.obtainMessage(MSG_DISCOVERY_FINISHED);
 			}
 			else if(BluetoothDevice.ACTION_FOUND.equals(action))
 			{
@@ -707,13 +708,11 @@ public class BluetoothWrapper
 				{
 					BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
-					Bundle bundle = new Bundle();
 					bundle.putString(DATA_DEVICE_NAME, device.getName());
 					bundle.putString(DATA_DEVICE_ADDRESS, device.getAddress());
 
-					Message msg = _handler.obtainMessage(MSG_DEVICE_FOUND);
+					msg = _handler.obtainMessage(MSG_DEVICE_FOUND);
 					msg.setData(bundle);
-					msg.sendToTarget();
 				}
 				catch(Exception e)
 				{
@@ -734,12 +733,16 @@ public class BluetoothWrapper
 					}
 				}
 
-				Bundle bundle = new Bundle();
 				bundle.putString(DATA_DEVICE_NAME, device.getName());
 				bundle.putString(DATA_DEVICE_ADDRESS, device.getAddress());
 				bundle.putStringArrayList(DATA_UUIDS, uuidStrings);
 
-				Message msg = _handler.obtainMessage(MSG_UUIDS_FOUND);
+				msg = _handler.obtainMessage(MSG_UUIDS_FOUND);
+				msg.setData(bundle);
+			}
+			
+			if (msg != null)
+			{
 				msg.setData(bundle);
 				msg.sendToTarget();
 			}

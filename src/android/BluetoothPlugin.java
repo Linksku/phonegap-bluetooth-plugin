@@ -1,6 +1,7 @@
 package org.apache.cordova.bluetooth;
 
 import java.util.ArrayList;
+import java.util.Set;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
@@ -18,6 +19,7 @@ import android.util.Log;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Bundle;
 import android.annotation.TargetApi;
 
 
@@ -60,6 +62,8 @@ public class BluetoothPlugin extends CordovaPlugin
 	// Added by Leo
 	private static final String ACTION_GET_ADDRESS	= "getAddress";
 	private static final String ACTION_GET_NAME			= "getName";
+	private static final String ACTION_SET_ACTION_RECEIVER	= "setActionReceiver";
+	private static CallbackContext _actionReceiver = null;
 
 	/**
 	 * Bluetooth interface
@@ -207,6 +211,10 @@ public class BluetoothPlugin extends CordovaPlugin
 		else if(ACTION_GET_NAME.equals(action))
 		{
 			getName(args, callbackCtx);
+		}
+		else if(ACTION_SET_ACTION_RECEIVER.equals(action))
+		{
+			setActionReceiver(args, callbackCtx);
 		}
 		else
 		{
@@ -767,6 +775,23 @@ public class BluetoothPlugin extends CordovaPlugin
 		@Override
 		public boolean handleMessage(Message msg)
 		{
+			if (_actionReceiver != null) {
+				// convert to JSON
+				JSONObject json = new JSONObject();
+				Bundle bundle = msg.getData();
+				Set<String> keys = bundle.keySet();
+				for (String key : keys) {
+				    try {
+				        json.put(key, JSONObject.wrap(bundle.get(key)));
+				    } catch(JSONException e) {
+				    }
+				}
+				
+				PluginResult result = new PluginResult(PluginResult.Status.OK, json);
+				result.setKeepCallback(true);
+				_actionReceiver.sendPluginResult(result);
+			}
+			
 			switch(msg.what)
 			{
 				case BluetoothWrapper.MSG_DISCOVERY_STARTED:
@@ -1066,5 +1091,10 @@ public class BluetoothPlugin extends CordovaPlugin
 		{
 			this.error(callbackCtx, e.getMessage(), BluetoothError.ERR_UNKNOWN);
 		}
+	}
+	
+	private void setActionReceiver(JSONArray args, CallbackContext callbackCtx)
+	{
+		_actionReceiver = callbackCtx;
 	}
 }
