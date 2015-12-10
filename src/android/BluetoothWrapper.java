@@ -57,7 +57,10 @@ public class BluetoothWrapper
 	public static final int MSG_BLUETOOTH_LOST			= 9;
 	public static final int MSG_UUIDS_FOUND				= 10;
 	public static final int MSG_DEVICE_BONDED			= 11;
-	public static final int MSG_DEVICE_CONNECTED        = 12;
+	public static final int MSG_DEVICE_CONNECTED   = 12;
+	public static final int MSG_LOCAL_NAME_CHANGED	= 13;
+	public static final int MSG_SCAN_MODE_CHANGED		= 14;
+	public static final int MSG_STATE_CHANGED			= 15;
 
 	public static final String DATA_DEVICE_ADDRESS 		= "DeviceAddress";
 	public static final String DATA_DEVICE_NAME			= "DeviceName";
@@ -151,6 +154,15 @@ public class BluetoothWrapper
 		ctx.registerReceiver(_receiver, filter);
 
 		filter = new IntentFilter(BluetoothDevice.ACTION_UUID);
+		ctx.registerReceiver(_receiver, filter);
+
+		filter = new IntentFilter(BluetoothAdapter.ACTION_LOCAL_NAME_CHANGED);
+		ctx.registerReceiver(_receiver, filter);
+
+		filter = new IntentFilter(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
+		ctx.registerReceiver(_receiver, filter);
+
+		filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
 		ctx.registerReceiver(_receiver, filter);
 	}
 
@@ -740,6 +752,18 @@ public class BluetoothWrapper
 				msg = _handler.obtainMessage(MSG_UUIDS_FOUND);
 				msg.setData(bundle);
 			}
+			else if(BluetoothAdapter.ACTION_LOCAL_NAME_CHANGED.equals(action))
+			{
+				msg = _handler.obtainMessage(MSG_LOCAL_NAME_CHANGED);
+			}
+			else if(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED.equals(action))
+			{
+				msg = _handler.obtainMessage(MSG_SCAN_MODE_CHANGED);
+			}
+			else if(BluetoothAdapter.ACTION_STATE_CHANGED.equals(action))
+			{
+				msg = _handler.obtainMessage(MSG_STATE_CHANGED);
+			}
 			
 			if (msg != null)
 			{
@@ -1031,6 +1055,26 @@ public class BluetoothWrapper
 		try
 		{
 			return _adapter.getName();
+		}
+		catch(Exception e)
+		{
+			throw e;
+		}
+	}
+	
+	public String getScanMode() throws Exception
+	{
+		try
+		{
+			int scanMode = _adapter.getScanMode();
+			if (scanMode == BluetoothAdapter.SCAN_MODE_CONNECTABLE) {
+				return "connectable";
+			} else
+			if (scanMode == BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+				return "discoverable";
+			} else {
+				return "none";
+			}
 		}
 		catch(Exception e)
 		{

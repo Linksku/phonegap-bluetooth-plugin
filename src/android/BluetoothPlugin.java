@@ -62,6 +62,7 @@ public class BluetoothPlugin extends CordovaPlugin
 	// Added by Leo
 	private static final String ACTION_GET_ADDRESS	= "getAddress";
 	private static final String ACTION_GET_NAME			= "getName";
+	private static final String ACTION_GET_SCAN_MODE = "getScanMode";
 	private static final String ACTION_SET_ACTION_RECEIVER	= "setActionReceiver";
 	private static CallbackContext _actionReceiver = null;
 
@@ -211,6 +212,10 @@ public class BluetoothPlugin extends CordovaPlugin
 		else if(ACTION_GET_NAME.equals(action))
 		{
 			getName(args, callbackCtx);
+		}
+		else if(ACTION_GET_SCAN_MODE.equals(action))
+		{
+			getScanMode(args, callbackCtx);
 		}
 		else if(ACTION_SET_ACTION_RECEIVER.equals(action))
 		{
@@ -1057,7 +1062,12 @@ public class BluetoothPlugin extends CordovaPlugin
 					}
 
 					break;
-
+				
+				case BluetoothWrapper.MSG_LOCAL_NAME_CHANGED:
+				case BluetoothWrapper.MSG_SCAN_MODE_CHANGED:
+				case BluetoothWrapper.MSG_ACTION_STATE_CHANGED:
+					break;
+				
 				default:
 
 					Log.e(LOG_TAG, "Message type could not be resolved.");
@@ -1086,6 +1096,18 @@ public class BluetoothPlugin extends CordovaPlugin
 		try
 		{
 			callbackCtx.sendPluginResult(new PluginResult(PluginResult.Status.OK, _bluetooth.getName()));
+		}
+		catch(Exception e)
+		{
+			this.error(callbackCtx, e.getMessage(), BluetoothError.ERR_UNKNOWN);
+		}
+	}
+
+	private void getScanMode(JSONArray args, CallbackContext callbackCtx)
+	{
+		try
+		{
+			callbackCtx.sendPluginResult(new PluginResult(PluginResult.Status.OK, _bluetooth.getScanMode()));
 		}
 		catch(Exception e)
 		{
