@@ -62,13 +62,16 @@ public class BluetoothWrapper
 	public static final int MSG_SCAN_MODE_CHANGED		= 14;
 	public static final int MSG_STATE_CHANGED			= 15;
 
-	public static final String DATA_DEVICE_ADDRESS 		= "DeviceAddress";
-	public static final String DATA_DEVICE_NAME			= "DeviceName";
-	public static final String DATA_BYTES				= "Bytes";
-	public static final String DATA_BYTES_READ			= "BytesRead";
-	public static final String DATA_UUIDS				= "Uuids";
-	public static final String DATA_ERROR				= "Error";
-	public static final String DATA_ACTION			= "Action";
+	public static final String DATA_DEVICE_ADDRESS 		= "deviceAddress";
+	public static final String DATA_DEVICE_NAME			= "deviceName";
+	public static final String DATA_BYTES				= "bytes";
+	public static final String DATA_BYTES_READ			= "bytesRead";
+	public static final String DATA_UUIDS				= "uuids";
+	public static final String DATA_ERROR				= "error";
+	public static final String DATA_ACTION			= "action";
+	public static final String DATA_LOCAL_NAME	= "localName";
+	public static final String DATA_SCAN_MODE		= "scanMode";
+	public static final String DATA_STATE			= "state";
 
 	/**
 	 * Is used to send messages back to the user of this class.
@@ -754,14 +757,32 @@ public class BluetoothWrapper
 			}
 			else if(BluetoothAdapter.ACTION_LOCAL_NAME_CHANGED.equals(action))
 			{
+				String localName = intent.getStringExtra(BluetoothAdapter.EXTRA_LOCAL_NAME);
+				bundle.putString(DATA_LOCAL_NAME, localName);
 				msg = _handler.obtainMessage(MSG_LOCAL_NAME_CHANGED);
 			}
 			else if(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED.equals(action))
 			{
+				int scanMode = intent.getIntExtra(BluetoothAdapter.EXTRA_SCAN_MODE, 0);
+				if (scanMode == BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE)
+					bundle.putString(DATA_SCAN_MODE, "discoverable");
+				else if (scanMode == BluetoothAdapter.SCAN_MODE_CONNECTABLE)
+					bundle.putString(DATA_SCAN_MODE, "connectable");
+				else
+					bundle.putString(DATA_SCAN_MODE, "none");
 				msg = _handler.obtainMessage(MSG_SCAN_MODE_CHANGED);
 			}
 			else if(BluetoothAdapter.ACTION_STATE_CHANGED.equals(action))
 			{
+				int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
+				if (state == BluetoothAdapter.STATE_ON)
+					bundle.putString(DATA_STATE, "on");
+				else if (state == BluetoothAdapter.STATE_TURNING_ON)
+					bundle.putString(DATA_STATE, "turningOn");
+				else if (state == BluetoothAdapter.STATE_TURNING_OFF)
+					bundle.putString(DATA_STATE, "turningOff");
+				else
+					bundle.putString(DATA_STATE, "off");
 				msg = _handler.obtainMessage(MSG_STATE_CHANGED);
 			}
 			

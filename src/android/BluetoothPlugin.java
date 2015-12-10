@@ -1065,7 +1065,7 @@ public class BluetoothPlugin extends CordovaPlugin
 				
 				case BluetoothWrapper.MSG_LOCAL_NAME_CHANGED:
 				case BluetoothWrapper.MSG_SCAN_MODE_CHANGED:
-				case BluetoothWrapper.MSG_ACTION_STATE_CHANGED:
+				case BluetoothWrapper.MSG_STATE_CHANGED:
 					break;
 				
 				default:
