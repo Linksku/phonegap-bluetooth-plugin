@@ -1102,4 +1102,28 @@ public class BluetoothWrapper
 			throw e;
 		}
 	}
+	
+	public String getState() throws Exception
+	{
+		try
+		{
+			int state = _adapter.getState();
+			if (state == BluetoothAdapter.STATE_ON) {
+				return "on";
+			} else
+			if (state == BluetoothAdapter.STATE_TURNING_ON {
+				return "turningOn";
+			} else
+			if (state == BluetoothAdapter.STATE_TURNING_OFF) {
+				return "turningOff";
+			}
+			else {
+				return "off";
+			}
+		}
+		catch(Exception e)
+		{
+			throw e;
+		}
+	}
 }

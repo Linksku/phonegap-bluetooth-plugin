@@ -63,6 +63,7 @@ public class BluetoothPlugin extends CordovaPlugin
 	private static final String ACTION_GET_ADDRESS	= "getAddress";
 	private static final String ACTION_GET_NAME			= "getName";
 	private static final String ACTION_GET_SCAN_MODE = "getScanMode";
+	private static final String ACTION_GET_STATE = "getState";
 	private static final String ACTION_SET_ACTION_RECEIVER	= "setActionReceiver";
 	private static CallbackContext _actionReceiver = null;
 
@@ -216,6 +217,10 @@ public class BluetoothPlugin extends CordovaPlugin
 		else if(ACTION_GET_SCAN_MODE.equals(action))
 		{
 			getScanMode(args, callbackCtx);
+		}
+		else if(ACTION_GET_STATE.equals(action))
+		{
+			getState(args, callbackCtx);
 		}
 		else if(ACTION_SET_ACTION_RECEIVER.equals(action))
 		{
@@ -1108,6 +1113,18 @@ public class BluetoothPlugin extends CordovaPlugin
 		try
 		{
 			callbackCtx.sendPluginResult(new PluginResult(PluginResult.Status.OK, _bluetooth.getScanMode()));
+		}
+		catch(Exception e)
+		{
+			this.error(callbackCtx, e.getMessage(), BluetoothError.ERR_UNKNOWN);
+		}
+	}
+
+	private void getState(JSONArray args, CallbackContext callbackCtx)
+	{
+		try
+		{
+			callbackCtx.sendPluginResult(new PluginResult(PluginResult.Status.OK, _bluetooth.getStateMode()));
 		}
 		catch(Exception e)
 		{
